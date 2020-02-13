@@ -6,4 +6,9 @@
             <class name="challenge1.challenge1"/>
         </classes>
     </test>
+    <test name="challenge2">
+        <classes>
+            <class name="challenge2.challenge2"/>
+        </classes>
+    </test>
 </suite>
