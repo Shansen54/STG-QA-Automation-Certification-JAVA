@@ -31,11 +31,10 @@ public class challenge2 {
         driver =  new ChromeDriver();
     }
 
-/*    @AfterClass
+    @AfterClass
     public void stopClass(){
         driver.quit();
     }
-*/
     @BeforeMethod()
     public void beforeMethod() throws Exception {
     }
@@ -87,6 +86,14 @@ public class challenge2 {
         WebDriverWait wait = new WebDriverWait(driver,30);
         waitForLoad();
         Assert.assertEquals(driver.getTitle(), "exotics For Auction at Copart - Salvage Cars For Sale");
+    }
+
+    @Test(dependsOnMethods={"searchForPorsche"})
+    //Check label for Porsche
+    public void searchForNameOfPorsche() throws Exception{
+        WebDriverWait wait = new WebDriverWait(driver,30);
+        String textOnPage = String.valueOf(driver.findElement((By.xpath("//label[contains(.,'Porsche')]"))));
+        Assert.assertTrue(textOnPage.contains("Porsche"));
     }
 
 }

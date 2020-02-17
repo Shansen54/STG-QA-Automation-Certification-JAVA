@@ -11,4 +11,9 @@
             <class name="challenge2.challenge2"/>
         </classes>
     </test>
+    <test name="challenge3">
+        <classes>
+            <class name="challenge3.challenge3"/>
+        </classes>
+    </test>
 </suite>
