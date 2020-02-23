@@ -37,6 +37,12 @@ public class challenge4 {
         return driver;
     }
 
+    public WebDriver afterChallenge4() throws Exception {
+        WebDriver driver = new ChromeDriver();
+        driver.quit();
+        return driver;
+    }
+
     @BeforeSuite
     public void startSuite() throws Exception {
     }
@@ -52,11 +58,12 @@ public class challenge4 {
     }
 
     @AfterClass
-    public void stopClass(){
-        driver.quit();
+    public void stopClass() throws Exception{
+        afterChallenge4();
     }
     @BeforeMethod()
     public void beforeMethod() throws Exception {
+        beforeChallenge4();
     }
 
     @AfterMethod()
