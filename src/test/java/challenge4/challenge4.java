@@ -23,7 +23,6 @@ When it comes time to change the “before” method, you will have to change it
 */
 
 
-import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.ExpectedCondition;
@@ -33,7 +32,7 @@ public class challenge4 {
 
     public WebDriver beforeChallenge4() throws Exception {
         System.setProperty("webdriver.chrome.driver", "./bin/chromedriver");
-        WebDriver driver =  new ChromeDriver();
+        WebDriver driver = new ChromeDriver();
         return driver;
     }
 
@@ -53,23 +52,81 @@ public class challenge4 {
     }
 
     @BeforeClass
-    public void startClass() throws Exception{
+    public void startClass() throws Exception {
         beforeChallenge4();
     }
 
     @AfterClass
-    public void stopClass() throws Exception{
+    public void stopClass() throws Exception {
         afterChallenge4();
     }
+
     @BeforeMethod()
     public void beforeMethod() throws Exception {
         beforeChallenge4();
     }
 
     @AfterMethod()
-    public void afterMethod(){
+    public void afterMethod() {
     }
 
+    //Fibonacci Series using Recursion - This code is contributed by Rajat Mishra
+    class fibonacci {
+        static int fib(int n) {
+            if (n <= 1)
+                return n;
+            return fib(n - 1) + fib(n - 2);
+        }
+    }
 
+    class toWords {
+        String[] singleNum_array = {"", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten",
+                "eleven", "twelve", "thirteen", "fourteen", "fifteen", "sixteen", "seventeen", "eighteen", "nineteen"};
+        String[] tens_array = {"", "", "twenty", "thirty", "forty", "fifty", "sixty", "seventy", "eighty", "ninety"};
+        String[] th = {"", "thousand", "million", "billion", "trillion"};
 
+        String s = s_number = number.toString();
+        Integer x = s.length;
+        String n = s.split(",");
+        String str = "";
+        Integer scount = 0;
+        Integer i = 0;
+
+        public void doTheWork() {
+            for (i = 0; i < x; i++) {
+                if ((x - i) % 3 == 2) {
+                    if (n[i] == '1') {
+                        str += singleNum_array[Number(n[i + 1])] + ' ';
+                        i++;
+                        scount = 1;
+                    } else if (n[i] != 0) {
+                        str += tens_array[n[i]] + ' ';
+                        scount = 1;
+                    }
+                } else if (n[i] != 0) {
+                    str += singleNum_array[n[i]] + ' ';
+                    if ((x - i) % 3 == 0) str += "hundred ";
+                    scount = 1;
+                }
+                if ((x - i) % 3 == 1) {
+                    if (scount) str += th[(x - i - 1) / 3] + ' ';
+                    scount = 0;
+                }
+            }
+            return str;
+        }
+    }
+
+    @Test
+            //("Challenge4 suite", function(){
+
+        public static void shouldReturnTheFibonacciNumberAndTheWordsOfTheNumber(){
+        //order is the nth order in the fibonacci sequence
+        int[] order = {1,4,9,13,17,20,26,31};
+        for(var i=0;i< 8;i++)
+        {
+        System.out.println("The (" + order[i] + ") number in the fibonacci sequence is "+fibonacci(order[i])+
+        " and its words are "+toWords(fibonacci(order[i])));
+        }
+        }
 }

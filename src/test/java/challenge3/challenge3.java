@@ -62,7 +62,7 @@ public class challenge3 {
     IMPREZA - https://www.copart.com/popular/model/impreza
     CAMRY - https://www.copart.com/popular/model/camry
     ...
-    (Done)
+
     */
 
     @Test()
