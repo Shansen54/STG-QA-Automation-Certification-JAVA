@@ -69,7 +69,7 @@ public class challenge4 {
     @AfterMethod()
     public void afterMethod() {
     }
-
+/*
     //Fibonacci Series using Recursion - This code is contributed by Rajat Mishra
     class fibonacci {
         static int fib(int n) {
@@ -129,4 +129,5 @@ public class challenge4 {
         " and its words are "+toWords(fibonacci(order[i])));
         }
         }
+     */
 }
