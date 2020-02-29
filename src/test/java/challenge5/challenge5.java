@@ -1,9 +1,6 @@
 package challenge5;
 
-import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -45,22 +42,24 @@ public class challenge5 {
 
     public void waitForLoad() {
         ExpectedCondition<Boolean> pageLoadCondition = new
-                ExpectedCondition<Boolean>() {
+                ExpectedCondition<>() {
                     @org.jetbrains.annotations.NotNull
                     public Boolean apply(WebDriver driver) {
-                        return ((JavascriptExecutor)driver).executeScript("return document.readyState").equals("complete");
+                        return ((JavascriptExecutor) driver).executeScript("return document.readyState").equals("complete");
                     }
                 };
     }
 
     /*
-    For this challenge, go to https://www.copart.com and do a search for “porsche” and change the  drop down
-    for “Show Entries” to 100 from 20.  Count how many different models of porsche is in the results on the
-    first page and return in the terminal how many of each type exists.
+    For this challenge, go to https://www.copart.com (DONE)
+    and do a search for “porsche” (DONE)
+    and change the  drop down for “Show Entries” to 100 from 20. (DONE)
+    Count how many different models of porsche is in the results on the
+    first page
+    and return in the terminal how many of each type exists.
+
     Possible values can be “CAYENNE S”, “BOXSTER S”, etc.
-
     *hint:  Look at adding every model into an array and then sort the array and count.
-
     For the 2nd part of this challenge, create a switch statement to count the types of damages.
     Here’s the types:
     REAR END
@@ -85,17 +84,30 @@ public class challenge5 {
     }
 
     @Test(dependsOnMethods={"verifyCopartTitle"})
-    //Check title
-    public void getPopularModels() throws Exception{
-        List <WebElement> vehicles = driver.findElements(By.cssSelector("#tabTrending > div > div > div > ul > li > a"));
-        String car = new String();
-        String url = new String();
-        for (WebElement model : vehicles) {
-        car = model.getText();
-        url = model.getAttribute("href");
-        System.out.println(car + " - " + url);
+    //Do Search for Porsche.
+    public void doPorscheSearch() throws Exception{
+        WebElement searchBox = driver.findElement(By.id("input-search"));
+        searchBox.sendKeys("porsche");
+        WebElement searchButton = driver.findElement(By.xpath("//button[contains(.,'Search')]"));
+        searchButton.click();
+        waitForLoad();
+        Thread.sleep(1000);
+        Assert.assertTrue(driver.getTitle().contains("porsche"));
+    }
 
-        }
+    @Test(dependsOnMethods={"doPorscheSearch"})
+    //Change displayed entries from 20 to 100
+    public void changeNumberOfEntriesListed() throws Exception{
+        WebElement numberOfEntries = driver.findElement(By.xpath("//select[@name='serverSideDataTable_length']"));
+//        Thread.sleep(2000);
+        numberOfEntries.click();
+        Thread.sleep(1000);
+        numberOfEntries.sendKeys("100");
+        Thread.sleep(1000);
+        numberOfEntries.click();
+        Thread.sleep(1000);
+        String number = numberOfEntries.getText();
+        Assert.assertTrue(number.contains("100"));
     }
 
 
