@@ -40,16 +40,6 @@ public class challenge5 {
     public void afterMethod(){
     }
 
-    public void waitForLoad() {
-        ExpectedCondition<Boolean> pageLoadCondition = new
-                ExpectedCondition<>() {
-                    @org.jetbrains.annotations.NotNull
-                    public Boolean apply(WebDriver driver) {
-                        return ((JavascriptExecutor) driver).executeScript("return document.readyState").equals("complete");
-                    }
-                };
-    }
-
     /*
     For this challenge, go to https://www.copart.com (DONE)
     and do a search for “porsche” (DONE)
@@ -79,7 +69,6 @@ public class challenge5 {
     @Test(dependsOnMethods={"goToCopart"})
     //Check title
     public void verifyCopartTitle() throws Exception{
-        waitForLoad();
         Assert.assertTrue(driver.getTitle().contains("Copart"));
     }
 
@@ -87,11 +76,11 @@ public class challenge5 {
     //Do Search for Porsche.
     public void doPorscheSearch() throws Exception{
         WebElement searchBox = driver.findElement(By.id("input-search"));
+        Thread.sleep(100);
         searchBox.sendKeys("porsche");
         WebElement searchButton = driver.findElement(By.xpath("//button[contains(.,'Search')]"));
         searchButton.click();
-        waitForLoad();
-        Thread.sleep(1000);
+        Thread.sleep(100);
         Assert.assertTrue(driver.getTitle().contains("porsche"));
     }
 
@@ -99,13 +88,12 @@ public class challenge5 {
     //Change displayed entries from 20 to 100
     public void changeNumberOfEntriesListed() throws Exception{
         WebElement numberOfEntries = driver.findElement(By.xpath("//select[@name='serverSideDataTable_length']"));
-//        Thread.sleep(2000);
         numberOfEntries.click();
-        Thread.sleep(1000);
+        Thread.sleep(100);
         numberOfEntries.sendKeys("100");
-        Thread.sleep(1000);
+        Thread.sleep(100);
         numberOfEntries.click();
-        Thread.sleep(1000);
+        Thread.sleep(100);
         String number = numberOfEntries.getText();
         Assert.assertTrue(number.contains("100"));
     }
