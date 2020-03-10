@@ -2,12 +2,9 @@ package challenge5;
 
 import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.support.ui.ExpectedCondition;
-import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
 import org.testng.annotations.*;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.TreeMap;
 
@@ -16,16 +13,16 @@ public class challenge5 {
     public WebDriver driver;
 
     @BeforeSuite
-    public void startSuite() throws Exception {
+    public void startSuite() {
     }
 
     @AfterSuite
-    public void stopSuite() throws Exception {
+    public void stopSuite() {
         System.out.println("All done!!!");
     }
 
     @BeforeClass
-    public void startClass() throws Exception{
+    public void startClass() {
         System.setProperty("webdriver.chrome.driver", "./bin/chromedriver");
         driver =  new ChromeDriver();
     }
@@ -35,7 +32,7 @@ public class challenge5 {
         driver.quit();
     }
     @BeforeMethod()
-    public void beforeMethod() throws Exception {
+    public void beforeMethod() {
     }
 
     @AfterMethod()
@@ -62,14 +59,14 @@ public class challenge5 {
 
     @Test()
     //Go to Copart.com
-    public void goToCopart() throws Exception{
-        WebDriverWait wait = new WebDriverWait(driver,30);
+    public void goToCopart() {
+//        WebDriverWait wait = new WebDriverWait(driver,30);
         driver.get("https://www.copart.com");
     }
 
     @Test(dependsOnMethods={"goToCopart"})
     //Check title
-    public void verifyCopartTitle() throws Exception{
+    public void verifyCopartTitle() {
         Assert.assertTrue(driver.getTitle().contains("Copart"));
     }
 
@@ -101,10 +98,10 @@ public class challenge5 {
 
     @Test(dependsOnMethods={"changeNumberOfEntriesListed"})
     //Look at adding every model into an array and then sort the array and count.
-    public void getListOfPorscheModels() throws Exception {
+    public void getListOfPorscheModels() {
         List<WebElement> modelsListOfElements = driver.findElements(By.xpath("//span[@data-uname=\"lotsearchLotmodel\"]"));
 
-        TreeMap<String, Integer> models_count = new TreeMap<String, Integer>();
+        TreeMap<String, Integer> models_count = new TreeMap<>();
         for (WebElement model : modelsListOfElements) {
             String key = model.getText();
             if (models_count.containsKey(key)) {
