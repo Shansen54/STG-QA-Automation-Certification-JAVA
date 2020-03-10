@@ -7,7 +7,9 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
 import org.testng.annotations.*;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.TreeMap;
 
 public class challenge5 {
 
@@ -45,11 +47,10 @@ public class challenge5 {
     and do a search for “porsche” (DONE)
     and change the  drop down for “Show Entries” to 100 from 20. (DONE)
     Count how many different models of porsche is in the results on the
-    first page
-    and return in the terminal how many of each type exists.
+    first page and return in the terminal how many of each type exists.
 
     Possible values can be “CAYENNE S”, “BOXSTER S”, etc.
-    *hint:  Look at adding every model into an array and then sort the array and count.
+    *hint:  Look at adding every model into an array and then sort the array and count. (DONE with List)
     For the 2nd part of this challenge, create a switch statement to count the types of damages.
     Here’s the types:
     REAR END
@@ -97,6 +98,25 @@ public class challenge5 {
         String number = numberOfEntries.getText();
         Assert.assertTrue(number.contains("100"));
     }
+
+    @Test(dependsOnMethods={"changeNumberOfEntriesListed"})
+    //Look at adding every model into an array and then sort the array and count.
+    public void getArrayOfPorscheModels() throws Exception {
+        List<WebElement> modelsListOfElements = driver.findElements(By.xpath("//span[@data-uname=\"lotsearchLotmodel\"]"));
+
+        TreeMap<String, Integer> models_count = new TreeMap<String, Integer>();
+        for (WebElement model : modelsListOfElements) {
+            String key = model.getText();
+            if (models_count.containsKey(key)) {
+                models_count.put(key,models_count.get(key)+1);
+            } else {
+                models_count.put(key, 1);
+            }
+//        }
+        }
+        System.out.println(models_count);
+    }
+
 
 
 }
