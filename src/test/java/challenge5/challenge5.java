@@ -101,7 +101,7 @@ public class challenge5 {
 
     @Test(dependsOnMethods={"changeNumberOfEntriesListed"})
     //Look at adding every model into an array and then sort the array and count.
-    public void getArrayOfPorscheModels() throws Exception {
+    public void getListOfPorscheModels() throws Exception {
         List<WebElement> modelsListOfElements = driver.findElements(By.xpath("//span[@data-uname=\"lotsearchLotmodel\"]"));
 
         TreeMap<String, Integer> models_count = new TreeMap<String, Integer>();
