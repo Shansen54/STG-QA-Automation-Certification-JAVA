@@ -74,11 +74,11 @@ public class challenge5 {
     //Do Search for Porsche.
     public void doPorscheSearch() throws Exception{
         WebElement searchBox = driver.findElement(By.id("input-search"));
-        Thread.sleep(100);
+        Thread.sleep(1000);
         searchBox.sendKeys("porsche");
         WebElement searchButton = driver.findElement(By.xpath("//button[contains(.,'Search')]"));
         searchButton.click();
-        Thread.sleep(100);
+        Thread.sleep(1000);
         Assert.assertTrue(driver.getTitle().contains("porsche"));
     }
 
@@ -97,23 +97,62 @@ public class challenge5 {
     }
 
     @Test(dependsOnMethods={"changeNumberOfEntriesListed"})
-    //Look at adding every model into an array and then sort the array and count.
+    //Add every model into a list.
     public void getListOfPorscheModels() {
         List<WebElement> modelsListOfElements = driver.findElements(By.xpath("//span[@data-uname=\"lotsearchLotmodel\"]"));
 
-        TreeMap<String, Integer> models_count = new TreeMap<>();
-        for (WebElement model : modelsListOfElements) {
-            String key = model.getText();
+        TreeMap<String, Integer> models_count;
+        models_count = new TreeMap<>();
+        //        }
+        modelsListOfElements.stream().map(WebElement::getText).forEach(key -> {
             if (models_count.containsKey(key)) {
-                models_count.put(key,models_count.get(key)+1);
+                models_count.put(key, models_count.get(key) + 1);
             } else {
                 models_count.put(key, 1);
             }
-//        }
-        }
+        });
         System.out.println(models_count);
     }
 
+    @Test(dependsOnMethods={"getListOfPorscheModels"})
+    //Add every damage type into a list and run through cases.
+    public void getListOfDamageTypes() {
+        List<WebElement> damageTypesList = driver.findElements(By.xpath("//span[@data-uname=\"lotsearchLotdamagedescription\"]"));
+//        Integer types_count[] = Integer[];
 
-
+        int frontend = 0, rearend = 0, mindent = 0, side =0, water = 0, misc = 0;
+        for (WebElement webElement : damageTypesList) {
+            var damageType = webElement.getText();
+//            types_count.(damageType);
+            switch (damageType) {
+                case "FRONT END":
+                    frontend = frontend + 1;
+                    break;
+                case "REAR END":
+                    rearend = rearend + 1;
+                    break;
+                case "MINOR DENT/SCRATCHES":
+                    mindent = mindent + 1;
+                    break;
+                case "SIDE":
+                    side = side + 1;
+                    break;
+                case "WATER/FLOOD":
+                    water = water + 1;
+                    break;
+                case "ALL OVER":
+                case "BURN - ENGINE":
+                case "ROLLOVER":
+                case "MECHANICAL":
+                case "UNDERCARRIAGE":
+                case "VANDALISM":
+                case "FRAME DAMAGE":
+                case "TOP/ROOF":
+                default:
+                    misc = misc + 1;
+            }
+        }
+        System.out.println("Rear End: " + rearend + ", Front End: " + frontend + " Minor Dents/Scratches: " + mindent +
+                ", Side: " + side + ", Water/Flood: " + water + ", and Misc: " + misc);
+    }
 }
