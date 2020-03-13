@@ -44,7 +44,7 @@ public class challenge5 {
     and do a search for “porsche” (DONE)
     and change the  drop down for “Show Entries” to 100 from 20. (DONE)
     Count how many different models of porsche is in the results on the
-    first page and return in the terminal how many of each type exists.
+    first page and return in the terminal how many of each type exists. (DONE)
 
     Possible values can be “CAYENNE S”, “BOXSTER S”, etc.
     *hint:  Look at adding every model into an array and then sort the array and count. (DONE with List)
@@ -54,13 +54,12 @@ public class challenge5 {
     FRONT END
     MINOR DENT/SCRATCHES
     UNDERCARRIAGE
-    And any other types can be grouped into one of MISC.
+    And any other types can be grouped into one of MISC. (DONE)
     */
 
     @Test()
     //Go to Copart.com
     public void goToCopart() {
-//        WebDriverWait wait = new WebDriverWait(driver,30);
         driver.get("https://www.copart.com");
     }
 
@@ -103,7 +102,6 @@ public class challenge5 {
 
         TreeMap<String, Integer> models_count;
         models_count = new TreeMap<>();
-        //        }
         modelsListOfElements.stream().map(WebElement::getText).forEach(key -> {
             if (models_count.containsKey(key)) {
                 models_count.put(key, models_count.get(key) + 1);
@@ -118,12 +116,10 @@ public class challenge5 {
     //Add every damage type into a list and run through cases.
     public void getListOfDamageTypes() {
         List<WebElement> damageTypesList = driver.findElements(By.xpath("//span[@data-uname=\"lotsearchLotdamagedescription\"]"));
-//        Integer types_count[] = Integer[];
 
-        int frontend = 0, rearend = 0, mindent = 0, side =0, water = 0, misc = 0;
+        int frontend = 0, rearend = 0, mindent = 0, side =0, water = 0, under = 0, misc = 0;
         for (WebElement webElement : damageTypesList) {
             var damageType = webElement.getText();
-//            types_count.(damageType);
             switch (damageType) {
                 case "FRONT END":
                     frontend = frontend + 1;
@@ -140,11 +136,13 @@ public class challenge5 {
                 case "WATER/FLOOD":
                     water = water + 1;
                     break;
+                case "UNDERCARRIAGE":
+                    under = under + 1;
+                    break;
                 case "ALL OVER":
                 case "BURN - ENGINE":
                 case "ROLLOVER":
                 case "MECHANICAL":
-                case "UNDERCARRIAGE":
                 case "VANDALISM":
                 case "FRAME DAMAGE":
                 case "TOP/ROOF":
@@ -152,7 +150,7 @@ public class challenge5 {
                     misc = misc + 1;
             }
         }
-        System.out.println("Rear End: " + rearend + ", Front End: " + frontend + " Minor Dents/Scratches: " + mindent +
-                ", Side: " + side + ", Water/Flood: " + water + ", and Misc: " + misc);
+        System.out.println("Rear End: " + rearend + ", Front End: " + frontend + ", Minor Dents/Scratches: " + mindent +
+                ", Side: " + side + ", Water/Flood: " + water + ", Undercarriage: " + under +", and Misc: " + misc);
     }
 }
