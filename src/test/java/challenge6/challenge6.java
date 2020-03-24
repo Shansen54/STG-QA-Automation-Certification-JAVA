@@ -1,18 +1,19 @@
 package challenge6;
 
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.testng.Assert;
 import org.testng.annotations.*;
-
+import org.openqa.selenium.support.ui.WebDriverWait;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
-import java.util.TreeMap;
 
 public class challenge6 {
 
     public WebDriver driver;
+    WebDriverWait wait;
 
     @BeforeSuite
     public void startSuite() {
@@ -27,6 +28,7 @@ public class challenge6 {
     public void startClass() {
         System.setProperty("webdriver.chrome.driver", "./bin/chromedriver");
         driver =  new ChromeDriver();
+        wait = new WebDriverWait(driver, 20);
     }
 
     @AfterClass
@@ -42,21 +44,12 @@ public class challenge6 {
     }
 
     /*
-    For this challenge, go to https://www.copart.com (DONE)
-    and do a search for “porsche” (DONE)
-    and change the  drop down for “Show Entries” to 100 from 20. (DONE)
-    Count how many different models of porsche is in the results on the
-    first page and return in the terminal how many of each type exists. (DONE)
-
-    Possible values can be “CAYENNE S”, “BOXSTER S”, etc.
-    *hint:  Look at adding every model into an array and then sort the array and count. (DONE with List)
-    For the 2nd part of this challenge, create a switch statement to count the types of damages.
-    Here’s the types:
-    REAR END
-    FRONT END
-    MINOR DENT/SCRATCHES
-    UNDERCARRIAGE
-    And any other types can be grouped into one of MISC. (DONE)
+    Challenge 6 - Error Handling
+    For this challenge, go to copart site, (Done) search for nissan, (Done)
+    and then for the model on the left side filter option, search for “skyline”.
+    Now look for a check box for a Skyline.  This is a rare car that might or might not be in the list for models.
+    When the link does not exist to click on, your script will throw an exception.
+    Catch the exception and take a screenshot of the page of what it looks like. 
     */
 
     @Test()
@@ -72,18 +65,18 @@ public class challenge6 {
     }
 
     @Test(dependsOnMethods={"verifyCopartTitle"})
-    //Do Search for Porsche.
-    public void doPorscheSearch() throws Exception{
+    //Do Search for Nissan.
+    public void doNissanSearch() throws Exception{
         WebElement searchBox = driver.findElement(By.id("input-search"));
         Thread.sleep(1000);
-        searchBox.sendKeys("porsche");
+        searchBox.sendKeys("nissan");
         WebElement searchButton = driver.findElement(By.xpath("//button[contains(.,'Search')]"));
         searchButton.click();
         Thread.sleep(1000);
-        Assert.assertTrue(driver.getTitle().contains("porsche"));
+        Assert.assertTrue(driver.getTitle().contains("nissan"));
     }
 
-    @Test(dependsOnMethods={"doPorscheSearch"})
+    @Test(dependsOnMethods={"doNissanSearch"})
     //Change displayed entries from 20 to 100
     public void changeNumberOfEntriesListed() throws Exception{
         WebElement numberOfEntries = driver.findElement(By.xpath("//select[@name='serverSideDataTable_length']"));
@@ -98,61 +91,52 @@ public class challenge6 {
     }
 
     @Test(dependsOnMethods={"changeNumberOfEntriesListed"})
-    //Add every model into a list.
-    public void getListOfPorscheModels() {
-        List<WebElement> modelsListOfElements = driver.findElements(By.xpath("//span[@data-uname=\"lotsearchLotmodel\"]"));
-
-        TreeMap<String, Integer> models_count;
-        models_count = new TreeMap<>();
-        modelsListOfElements.stream().map(WebElement::getText).forEach(key -> {
-            if (models_count.containsKey(key)) {
-                models_count.put(key, models_count.get(key) + 1);
-            } else {
-                models_count.put(key, 1);
-            }
-        });
-        System.out.println(models_count);
+    //Find Nissan in the serverSideDataTable.
+    public void findNissanInTheServerSideDataTable() {
+        String htmltext = driver.findElement(By.id("serverSideDataTable")).getAttribute("innerHTML");
+        Assert.assertTrue(htmltext.contains("NISSAN"));
     }
 
-    @Test(dependsOnMethods={"getListOfPorscheModels"})
-    //Add every damage type into a list and run through cases.
-    public void getListOfDamageTypes() {
-        List<WebElement> damageTypesList = driver.findElements(By.xpath("//span[@data-uname=\"lotsearchLotdamagedescription\"]"));
-
-        int frontend = 0, rearend = 0, mindent = 0, side =0, water = 0, under = 0, misc = 0;
-        for (WebElement webElement : damageTypesList) {
-            var damageType = webElement.getText();
-            switch (damageType) {
-                case "FRONT END":
-                    frontend = frontend + 1;
-                    break;
-                case "REAR END":
-                    rearend = rearend + 1;
-                    break;
-                case "MINOR DENT/SCRATCHES":
-                    mindent = mindent + 1;
-                    break;
-                case "SIDE":
-                    side = side + 1;
-                    break;
-                case "WATER/FLOOD":
-                    water = water + 1;
-                    break;
-                case "UNDERCARRIAGE":
-                    under = under + 1;
-                    break;
-                case "ALL OVER":
-                case "BURN - ENGINE":
-                case "ROLLOVER":
-                case "MECHANICAL":
-                case "VANDALISM":
-                case "FRAME DAMAGE":
-                case "TOP/ROOF":
-                default:
-                    misc = misc + 1;
+    @Test(dependsOnMethods={"findNissanInTheServerSideDataTable"})
+    //Finds all Nissan models in the list group.
+    public void findNissanModelsInListGroup() {
+        List<WebElement> filterList = driver.findElements(By.xpath("//*[@id='filters-collapse-1']//li//a[1]"));
+        for (var i = 0; i < filterList.size(); i++){
+            if (filterList.get(i).getText().equals("Model")){
+                filterList.get(i);
+                break;
             }
         }
-        System.out.println("Rear End: " + rearend + ", Front End: " + frontend + ", Minor Dents/Scratches: " + mindent +
-                ", Side: " + side + ", Water/Flood: " + water + ", Undercarriage: " + under +", and Misc: " + misc);
+     }
+
+    @Test(dependsOnMethods={"findNissanModelsInListGroup"})
+    //Search the Model Filter and enter Skyline to search for it.
+    public <e> void useTheModelFilterToSearchForSkyline() throws IOException {
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("input-search")));
+        WebElement filterBox = driver.findElement(By.id("input-search"));
+        System.out.println(filterBox.getText());
+        driver.findElement(By.xpath("(//button[@ng-click=\"search()\"])[2]")).click();
+
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("serverSideDataTable")));
+
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//a[@data-uname=\"ModelFilter\"]")));
+        driver.findElement(By.xpath("//a[@data-uname=\"ModelFilter\"]")).click();
+
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("(//input[@ng-model=\"filter.searchText\"])[4]")));
+        WebElement modelInputField = driver.findElement(By.xpath("(//input[@ng-model=\"filter.searchText\"])[4]"));
+
+        System.out.println("hi there");
+        modelInputField.sendKeys("skyline" + Keys.ENTER);
+
+        try {
+            WebElement filterCheckbox = driver.findElement(By.xpath("//*[@id='lot_model_descSKYLINE']"));
+            filterCheckbox.click();
+        } catch (Exception e) {
+            WebElement filterCheckbox = driver.findElement(By.xpath("//*[@id='lot_model_descSKYLINE']"));
+            filterCheckbox.click();
+            File src;
+            src = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
+            System.out.printf("File Saved", src.createNewFile());
+        }
     }
 }
