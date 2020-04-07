@@ -6,6 +6,8 @@ import org.testng.Assert;
 import org.testng.annotations.*;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.openqa.selenium.support.ui.ExpectedConditions;
+
+import javax.lang.model.util.Types;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
@@ -92,14 +94,14 @@ public class challenge6 {
 
     @Test(dependsOnMethods={"changeNumberOfEntriesListed"})
     //Find Nissan in the serverSideDataTable.
-    public void findNissanInTheServerSideDataTable() {
+    public void findNissanInTheServerSideDataTable() throws Exception {
         String htmltext = driver.findElement(By.id("serverSideDataTable")).getAttribute("innerHTML");
         Assert.assertTrue(htmltext.contains("NISSAN"));
     }
 
     @Test(dependsOnMethods={"findNissanInTheServerSideDataTable"})
     //Finds all Nissan models in the list group.
-    public void findNissanModelsInListGroup() {
+    public void findNissanModelsInListGroup() throws Exception {
         List<WebElement> filterList = driver.findElements(By.xpath("//*[@id='filters-collapse-1']//li//a[1]"));
         for (var i = 0; i < filterList.size(); i++){
             if (filterList.get(i).getText().equals("Model")){
@@ -125,12 +127,17 @@ public class challenge6 {
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("(//input[@ng-model=\"filter.searchText\"])[4]")));
         WebElement modelInputField = driver.findElement(By.xpath("(//input[@ng-model=\"filter.searchText\"])[4]"));
 
-        System.out.println("hi there");
         modelInputField.sendKeys("skyline" + Keys.ENTER);
 
         try {
             WebElement filterCheckbox = driver.findElement(By.xpath("//*[@id='lot_model_descSKYLINE']"));
             filterCheckbox.click();
+            String htmltext = driver.findElement(By.id("lot_model_descSKYLINE")).getText();
+            Assert.assertFalse(htmltext.contains("skyline"));
+            System.out.println(htmltext);
+            String htmltext2 = driver.findElement(By.xpath("//tr[1]//td[6]//span[1]")).getText();
+            Assert.assertFalse(htmltext2.contains("skyline"));
+            System.out.println(htmltext2);
         } catch (Exception e) {
             WebElement filterCheckbox = driver.findElement(By.xpath("//*[@id='lot_model_descSKYLINE']"));
             filterCheckbox.click();
